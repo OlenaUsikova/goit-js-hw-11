@@ -14,29 +14,4 @@ export default async function getImages(searchQuery, currentPage, perPage) {
         }
         return listImages.data;
     }
-    
-
-
-
-    // export default async function getImages(searchQuery, currentPage, onPage) {
-//   searchQuery = ev.target.elements.searchQuery.value.toLowerCase().trim();
-//   // console.log(searchQuery);
-//   try {
-//     const listImages = await axios.get(
-//       `https://pixabay.com/api/?key=${API_KEY}&q=${searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${currentPage}&per_page=${onPage}`
-//     );
-//     // console.log(listImages);
-
-//     if ((searchQuery = "")) {
-//         loadMoreBtn.classList.add('is-hidden');
-//       return Notify.failure('Please enter another search query');
-//     }
-//     currentPage += 1;
-//     return listImages;
-//   } catch (error) {
-//     console.error(error);
-//     Notify.warning(
-//       'Sorry, there are no images matching your search query. Please try again.'
-//     );
-//   }
-// }
+ 

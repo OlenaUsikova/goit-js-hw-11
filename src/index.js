@@ -20,22 +20,29 @@ form.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(ev) {
   ev.preventDefault();
-  gallery.innerHTML = '';
+  // gallery.innerHTML = '';
+  backup = ``;
   searchQuery = inputGet.value;
   getImages(searchQuery, currentPage, perPage)
     .then(data => {
-        if (data.totalHits === 0) {
+      if (data.totalHits === 0) {
         Notify.warning(
           'Sorry, there are no images matching your search query. Please try again.'
         );
-      } else {
+        return;
+      } else if (data.totalHits > perPage) {
         Notify.success(`Hooray! We found ${data.totalHits} images`);
+        gallery.innerHTML = '';
+
+        renderImages(data.hits);
+        loadMoreBtn.classList.remove('is-hidden');
+      } else if (data.totalHits <= perPage) {
         gallery.innerHTML = '';
         renderImages(data.hits);
         // loadMoreBtn.style.display = "blok";
       }
     })
-    .catch(error => error);
+    .catch(error => console.log(error));
 
   loadMoreBtn.addEventListener('click', onLoadMore);
   function onLoadMore() {
@@ -44,13 +51,16 @@ function onFormSubmit(ev) {
 
     getImages(searchQuery, currentPage, perPage).then(data => {
       if (data.totalHits - perPage * currentPage <= perPage) {
-        loadMoreBtn.style.display = 'none';
+        // loadMoreBtn.style.display = 'none';
+        loadMoreBtn.classList.add('is-hidden');
         Notify.warning(
           "We're sorry, but you've reached the end of search results."
         );
       }
+      gallery.innerHTML = '';
       lightbox.refresh();
       renderImages(data.hits);
+      loadMoreBtn.classList.remove('is-hidden');
     });
   }
 
@@ -58,7 +68,7 @@ function onFormSubmit(ev) {
     currentPage = 1;
 
     array.forEach(item => {
-     backup += `<div class="photo-card">
+      backup += `<div class="photo-card">
     <a class="gallery__item" href=${item.largeImageURL}><img class="gallery__image" src=${item.previewURL} alt=${item.tags} loading="lazy"/></a>
   <div class="info">
     <p class="info-item">
@@ -78,11 +88,9 @@ function onFormSubmit(ev) {
     });
     gallery.innerHTML += backup;
 
-    loadMoreBtn.classList.remove('is-hidden');
+    // loadMoreBtn.classList.remove('is-hidden');
 
     const lightbox = new SimpleLightbox('.gallery a', {
-      // captions: true,
-      // captionsData: 'alt',
       captionDelay: 250,
     });
     lightbox.refresh();
