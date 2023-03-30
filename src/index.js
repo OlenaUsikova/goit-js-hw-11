@@ -16,12 +16,19 @@ let currentPage = 1;
 let perPage = 40;
 let backup = ``;
 
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionDelay: 250,
+});
+lightbox.refresh();
+
+
 form.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(ev) {
   ev.preventDefault();
   // gallery.innerHTML = '';
   backup = ``;
+  currentPage = 1;
   searchQuery = inputGet.value;
   getImages(searchQuery, currentPage, perPage)
     .then(data => {
@@ -30,42 +37,45 @@ function onFormSubmit(ev) {
           'Sorry, there are no images matching your search query. Please try again.'
         );
         return;
-      } else if (data.totalHits > perPage) {
-        Notify.success(`Hooray! We found ${data.totalHits} images`);
-        gallery.innerHTML = '';
-
-        renderImages(data.hits);
-        loadMoreBtn.classList.remove('is-hidden');
-      } else if (data.totalHits <= perPage) {
-        gallery.innerHTML = '';
-        renderImages(data.hits);
-        // loadMoreBtn.style.display = "blok";
       }
-    })
-    .catch(error => console.log(error));
+      Notify.success(`Hooray! We found ${data.totalHits} images`);
+      gallery.innerHTML = '';
+      renderImages(data.hits);
 
-  loadMoreBtn.addEventListener('click', onLoadMore);
+      if (data.totalHits > perPage) {
+         loadMoreBtn.classList.remove('is-hidden');
+      }else{
+        loadMoreBtn.classList.add('is-hidden');
+      }
+      })
+    .catch(error => console.log(error));  
+}
+
+
+loadMoreBtn.addEventListener('click', onLoadMore);
+  
   function onLoadMore() {
     backup = ``;
     currentPage += 1;
 
     getImages(searchQuery, currentPage, perPage).then(data => {
       if (data.totalHits - perPage * currentPage <= perPage) {
-        // loadMoreBtn.style.display = 'none';
-        loadMoreBtn.classList.add('is-hidden');
+       loadMoreBtn.style.display = 'none';
+        // loadMoreBtn.classList.add('is-hidden');
         Notify.warning(
           "We're sorry, but you've reached the end of search results."
         );
       }
       gallery.innerHTML = '';
-      lightbox.refresh();
+     
       renderImages(data.hits);
+      lightbox.refresh();
       loadMoreBtn.classList.remove('is-hidden');
     });
   }
 
   function renderImages(array) {
-    currentPage = 1;
+    // currentPage = 1;
 
     array.forEach(item => {
       backup += `<div class="photo-card">
@@ -86,13 +96,5 @@ function onFormSubmit(ev) {
   </div>
 </div>`;
     });
-    gallery.innerHTML += backup;
-
+    gallery.innerHTML += backup;}
     // loadMoreBtn.classList.remove('is-hidden');
-
-    const lightbox = new SimpleLightbox('.gallery a', {
-      captionDelay: 250,
-    });
-    lightbox.refresh();
-  }
-}
