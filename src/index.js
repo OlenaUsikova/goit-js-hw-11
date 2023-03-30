@@ -19,7 +19,7 @@ form.addEventListener('submit', renderImages);
 function renderImages(ev) {
   ev.preventDefault();
   currentPage = 1;
-
+  
   getImages(ev).then(response => {
     console.log(response);
 
@@ -50,8 +50,7 @@ function renderImages(ev) {
       <b>Downloads: ${item.downloads}</b>
     </p>
   </div>
-</div>`;
-    });
+</div>`;});
     gallery.insertAdjacentHTML('afterbegin', backup);
 
     loadMoreBtn.classList.remove('is-hidden');

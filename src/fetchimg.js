@@ -14,9 +14,10 @@ export default async function getImages(ev) {
     const listImages = await axios.get(
       `https://pixabay.com/api/?key=${API_KEY}&q=${searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${currentPage}&per_page=${onPage}`
     );
-    console.log(listImages);
+    // console.log(listImages);
 
     if ((searchQuery = "")) {
+        loadMoreBtn.classList.add('is-hidden');
       return Notify.failure('Please enter another search query');
     }
     currentPage += 1;
