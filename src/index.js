@@ -12,7 +12,7 @@ const form = document.querySelector('#search-form');
 const inputGet = form.querySelector('input');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
-loadMoreBtn.classList.toggle('is-hidden');
+loadMoreBtn.classList.add('is-hidden');
 
 form.addEventListener('submit', renderImages);
 
@@ -54,7 +54,7 @@ function renderImages(ev) {
     });
     gallery.insertAdjacentHTML('afterbegin', backup);
 
-    loadMoreBtn.classList.toggle('is-hidden');
+    loadMoreBtn.classList.remove('is-hidden');
 
     const lightbox = new SimpleLightbox('.gallery a', {
       // captions: true,
@@ -77,8 +77,8 @@ function onLoadMore(ev) {
         'Sorry, there are no images matching your search query. Please try again.'
       );
     }
-    if (response.data.totalHits <= onPage * currentPage) {
-      loadMoreBtn.classList.toggle('is-hidden');
+    if ((response.data.totalHits- onPage * currentPage) <= onPage) {
+      loadMoreBtn.classList.remove('is-hidden');
     }
     response.data.hits.forEach(item => {
       backup += `<div class="photo-card">
