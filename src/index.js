@@ -66,7 +66,7 @@ loadMoreBtn.addEventListener('click', onLoadMore);
           "We're sorry, but you've reached the end of search results."
         );
       }
-      gallery.innerHTML = '';
+      // gallery.innerHTML = '';
      
       renderImages(data.hits);
       lightbox.refresh();
